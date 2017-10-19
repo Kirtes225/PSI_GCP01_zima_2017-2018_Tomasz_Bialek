@@ -1,5 +1,8 @@
-#include <stdlib.h>
-#include <time.h>
+//#include <stdlib.h>
+//#include <time.h>
+
+#include <iostream>
+#include <ctime>
 
 #include "Perceptron.h"
 

@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <iostream>
 
 #include "Perceptron.h"
@@ -16,7 +15,7 @@ int main() {
 	int startEpoch = 0;
 	int numberOfEpochs = 15;
 	int numberOfInputs = 3;
-	double learningRate = 0.01;
+	double learningRate = 0.1;
 
 	Perceptron perceptron(numberOfInputs, learningRate);
 
