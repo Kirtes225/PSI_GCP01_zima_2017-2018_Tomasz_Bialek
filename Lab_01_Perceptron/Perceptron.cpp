@@ -28,8 +28,8 @@ void Perceptron::train(const double inputs[], int expectedResult){
 
 //zwraca: wynik koñcowy dla pojedynczego wejœcia <porównuje wartoœæ wejœcia z funkcj¹ binarn¹ z progiem>
 int Perceptron::getResult(const double inputs[]){
-	return (getValue(inputs) >= this->threshold);
-	//return (getValue(inputs) > 1) ? 1 : 0;
+	//return (getValue(inputs) >= this->threshold);
+	return (getValue(inputs) > 1) ? 1 : 0;
 }
 
 //zwraca: waga dla pojedynczego wejœcia

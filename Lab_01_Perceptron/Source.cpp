@@ -7,13 +7,13 @@ using namespace std;
 
 int main() {
 	const int trainingIterations = 10;
-	const int numberOfInputs = 2;
+	const int numberOfInputs = 3;
 	const double trainingRate = 0.1;
 
-	const double ZERO_ZERO[] = { 0, 0 };
-	const double ZERO_ONE[] = { 0, 1 };
-	const double ONE_ZERO[] = { 1, 0 };
-	const double ONE_ONE[] = { 1, 1 };
+	const double ZERO_ZERO[] = {1, 0, 0 };
+	const double ZERO_ONE[] = {1, 0, 1 };
+	const double ONE_ZERO[] = {1, 1, 0 };
+	const double ONE_ONE[] = {1, 1, 1 };
 
 	Perceptron perceptron(numberOfInputs, trainingRate);
 
