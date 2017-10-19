@@ -1,9 +1,5 @@
-//#include <stdlib.h>
-//#include <time.h>
-
 #include <iostream>
 #include <ctime>
-
 #include "Perceptron.h"
 
 //zwraca: suma wszytkich wejœcie*waga

@@ -1,5 +1,6 @@
 class Perceptron {
 public:
+
 	unsigned numberOfInputs;
 	double *weights;
 	double learningRate;
