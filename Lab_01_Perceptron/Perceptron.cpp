@@ -14,12 +14,12 @@ double Perceptron::getValue(const double inputs[]){
 }
 
 //ustaw: wspó³czynnik uczenia
-void Perceptron::setTrainingRate(double trainingRate) {
-	this->trainingRate = trainingRate;
+void Perceptron::setTrainingRate(double learningRate) {
+	this->learningRate = learningRate;
 }
 
 //ucz siê
-void Perceptron::train(const double inputs[], int expectedResult){
+void Perceptron::learn(const double inputs[], int expectedResult){
 	int result = getResult(inputs);
 	if (result == expectedResult)
 		return;
@@ -28,7 +28,6 @@ void Perceptron::train(const double inputs[], int expectedResult){
 
 //zwraca: wynik koñcowy dla pojedynczego wejœcia <porównuje wartoœæ wejœcia z funkcj¹ binarn¹ z progiem>
 int Perceptron::getResult(const double inputs[]){
-	//return (getValue(inputs) >= this->threshold);
 	return (getValue(inputs) > 1) ? 1 : 0;
 }
 
@@ -42,19 +41,14 @@ const double * Perceptron::getWeights(){
 	return this->weights;
 }
 
-//zwraca: iloœæ wejæ
+//zwraca: iloœæ wejœæ
 unsigned Perceptron::getNumOfInputs(){
 	return this->numberOfInputs;
 }
 
-//zwraca: funkcja aktywacji
-double Perceptron::getThreshold(){
-	return this->threshold;
-}
-
 //zwraca: wspó³czynnik uczenia
 double Perceptron::getTrainingRate(){
-	return this->trainingRate;
+	return this->learningRate;
 }
 
 //ustaw: waga dla danego wejœcia
@@ -69,45 +63,29 @@ void Perceptron::setWeights(const double * weights){
 		this->weights[i] = weights[i];
 }
 
-//ustaw: funkcja aktywacji
-void Perceptron::setThreshold(double threshold){
-	this->threshold = threshold;
-}
-
 //funkcja losuj¹ca dla wag
 double Perceptron::getRandomDouble(){
 	double randValue = ((double)rand() / (double)RAND_MAX);
-	double negativeRand = ((double)rand() / (double)RAND_MAX);
-	if (negativeRand < 0.5)
-		randValue *= 1.0;
 	return randValue;
 }
 
 //funkcja - zmienia wagi
 void Perceptron::changeWeights(int actualResult, int desiredResult, const double inputs[]){
 	for (int i = 0; i < this->numberOfInputs; i++)
-		this->weights[i] += this->trainingRate * (desiredResult - actualResult) * inputs[i];
-
-	this->threshold -= this->trainingRate * (desiredResult - actualResult);
+		this->weights[i] += this->learningRate * (desiredResult - actualResult) * inputs[i];
 }
 
 //konstruktor
 Perceptron::Perceptron(unsigned numOfInputs, double trainingRate){
-	static int initializedRandomization_ = 0;
+	srand(time(NULL));
+	this->learningRate = trainingRate;
 
 	this->numberOfInputs = numOfInputs;
 	if (this->numberOfInputs <= 0)
 		this->numberOfInputs = 1;
 
-	this->trainingRate = trainingRate;
 	this->weights = new double[numberOfInputs];
-
-	if (!initializedRandomization_) {
-		srand(time(NULL));
-		initializedRandomization_ = 1;
-	}
 	for (int i = 0; i < this->numberOfInputs; i++)
 		this->weights[i] = getRandomDouble();
 
-	this->threshold = getRandomDouble();
 }

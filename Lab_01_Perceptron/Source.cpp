@@ -6,16 +6,19 @@
 using namespace std;
 
 int main() {
-	const int trainingIterations = 10;
-	const int numberOfInputs = 3;
-	const double trainingRate = 0.1;
+	
+	const double 
+		ONE_ONE[] = { 1, 1, 1 }, 
+		ZERO_ONE[] = {1, 0, 1 },
+		ONE_ZERO[] = {1, 1, 0 },
+		ZERO_ZERO[] = { 1, 0, 0 };
 
-	const double ZERO_ZERO[] = {1, 0, 0 };
-	const double ZERO_ONE[] = {1, 0, 1 };
-	const double ONE_ZERO[] = {1, 1, 0 };
-	const double ONE_ONE[] = {1, 1, 1 };
+	int startEpoch = 0;
+	int numberOfEpochs = 15;
+	int numberOfInputs = 3;
+	double learningRate = 0.01;
 
-	Perceptron perceptron(numberOfInputs, trainingRate);
+	Perceptron perceptron(numberOfInputs, learningRate);
 
 	cout << "----------------AND - wyniki PRZED uczeniem----------------" << endl;
 	cout << "Wejscie (0,0) - wynik: " << perceptron.getResult(ZERO_ZERO) << endl;
@@ -23,15 +26,18 @@ int main() {
 	cout << "Wejscie (1,0) - wynik: " << perceptron.getResult(ONE_ZERO) << endl;
 	cout << "Wejscie (1,1) - wynik: " << perceptron.getResult(ONE_ONE) << endl;
 
-	for (int i = 0; i < trainingIterations; i++) {
-		perceptron.train(ZERO_ZERO, 0);
-		perceptron.train(ZERO_ONE, 0);
-		perceptron.train(ONE_ZERO, 0);
-		perceptron.train(ONE_ONE, 1);
-		//cout << "Wagi: " << *perceptron.Perceptron_getWeights(perceptron) << endl;
-		//cout << "Wagi: " << perceptron.Perceptron_getWeightAt(perceptron, 0) << " " 
-		//<< perceptron.Perceptron_getWeightAt(perceptron, 1) << endl;
+	while (startEpoch < numberOfEpochs) {
+		perceptron.learn(ZERO_ZERO, 0);
+		perceptron.learn(ZERO_ONE, 0);
+		perceptron.learn(ONE_ZERO, 0);
+		perceptron.learn(ONE_ONE, 1);
+
+		//cout << "Wagi: " << *perceptron.getWeights() << endl;
+		//cout << "Wagi: " << perceptron.getWeightAt(0) << " " << perceptron.getWeightAt(1) << endl;
+
+		startEpoch++;
 	}
+
 
 	cout<< endl << "------------------AND - wyniki PO uczeniu------------------" << endl;
 	cout << "Wejscie (0,0) - wynik: " << perceptron.getResult(ZERO_ZERO) << endl;
