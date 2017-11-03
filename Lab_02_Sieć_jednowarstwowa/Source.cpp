@@ -28,10 +28,28 @@ int main()
 
 	Perceptron perceptron(numberOfInputs, learningRate);
 
-	int testLetter[BITS_OF_ONE_LETTER] = { i }; // bity litery do testowania
-	
+	int testLetter[BITS_OF_ONE_LETTER] = { d }; // bity litery do testowania
+	int testLetter2[BITS_OF_ONE_LETTER] = { D };
+	int testLetter3[BITS_OF_ONE_LETTER] = { A };
+	int testLetter4[BITS_OF_ONE_LETTER] = { a };
+	int testLetter5[BITS_OF_ONE_LETTER] = { i };
+
 	perceptron.learn();
+	cout << "TEST - Litera d" << endl;
 	perceptron.test(testLetter);
+
+	cout << endl << "TEST - Litera D" << endl;
+	perceptron.test(testLetter2);
+
+	cout << endl << "TEST - Litera A" << endl;
+	perceptron.test(testLetter3);
+
+	cout << endl << "TEST - Litera a" << endl;
+	perceptron.test(testLetter4);
+
+	cout << endl << "TEST - Litera i" << endl;
+	perceptron.test(testLetter5);
+
 
 	perceptron.~Perceptron();
 	system("PAUSE");
