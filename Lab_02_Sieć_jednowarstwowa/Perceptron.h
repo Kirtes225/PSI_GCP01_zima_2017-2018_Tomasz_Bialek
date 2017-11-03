@@ -27,4 +27,6 @@ public:
 
 	Perceptron(unsigned numOfInputs, double trainingRate);
 	~Perceptron();
+
+	double func(double sum); //funkcja sigmoidalna (przyjmuje getSumOfInput)
 };

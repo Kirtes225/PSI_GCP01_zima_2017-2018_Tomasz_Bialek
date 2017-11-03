@@ -57,11 +57,13 @@ void Perceptron::learn()
 		for (int i = 0; i < this->numberOfInputs; i++) //zmienna i oznacza indeks litery w tablicy
 		{
 			sumOfInput = getSumOfInput(i);
-			localError = this->expectedResults[i] - sumOfInput;
+			localError = this->expectedResults[i] - func(sumOfInput);
 
 			//zmiana wag
-			for (int j = 0; j < BITS_OF_ONE_LETTER; j++) //zmienna j oznacza bity danej litery
+			for (int j = 0; j < BITS_OF_ONE_LETTER; j++) { //zmienna j oznacza bity danej litery
 				this->weights[j] += this->learningRate * localError * this->inputData[i][j];
+			}
+
 			////////////////////////////////////////
 			globalError += pow(localError, 2);
 		}
@@ -123,4 +125,10 @@ Perceptron::Perceptron(unsigned numberOfInputs, double learningRate)
 Perceptron::~Perceptron()
 {
 	delete weights;
+}
+
+//wykorzystywane przy aktualizacji wag
+double Perceptron::func(double sum)
+{	    // Wspolczynnik beta = 0.5 
+		return 1 / (1 + exp(-0.5*sum));
 }
