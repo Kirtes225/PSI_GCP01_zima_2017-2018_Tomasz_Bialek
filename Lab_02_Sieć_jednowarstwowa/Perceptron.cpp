@@ -1,5 +1,23 @@
 #include "Perceptron.h"
 
+//dla kazdej wagi perceptronu bêd¹ losowanie liczby z zakresu od 0 do 1
+double Perceptron::getRandomDouble()
+{
+	double randValue = ((double)rand() / (double)RAND_MAX);
+	return randValue;
+}
+
+//oblicza sumê wszytkich wejœcie*waga, przyjmuje indeks litery
+double Perceptron::getSumOfInput(int i)
+{
+	double sum = 0;
+
+	for (int j = 0; j < BITS_OF_ONE_LETTER; j++)
+		sum += this->weights[j] * this->inputData[i][j];
+
+	return sum;
+}
+
 //wczytanie danych ucz¹cych z pliku
 void Perceptron::readTestData()
 {
@@ -24,32 +42,15 @@ void Perceptron::readTestData()
 	file.close();
 }
 
-//dla kazdej wagi perceptronu bêd¹ losowanie liczby z zakresu od 0 do 1
-double Perceptron::getRandomDouble()
-{   
-	double randValue = ((double)rand() / (double)RAND_MAX);
-	return randValue;
-}
-
-//oblicza sumê wszytkich wejœcie*waga, przyjmuje indeks litery
-double Perceptron::getSumOfInput(int i)
-{
-	double sum = 0;
-
-	for (int j = 0; j < BITS_OF_ONE_LETTER; j++)
-		sum += this->weights[j] * this->inputData[i][j];
-
-	return sum;
-}
-
 //ucz siê
-void Perceptron::learn()
+void Perceptron::learn1()
 {
-	double localError = 0.;	//b³¹d lokalny
-	double globalError = 0.;	//b³¹d globalny
 	double sumOfInput = 0.;	//zmienna przechowuj¹ca wynik getSumOfInput(i)
+	double errorOfOnePerceptron = 0.;	//b³¹d lokalny
+	double globalError = 0.;	//b³¹d globalny
 	double threshold = 1.5; //próg okreœlaj¹cy kiedy sieæ jet ju¿ nauczona
 	int epoch = 0;	//epoka uczenia siê (na start = 0)
+	double MAPE = 0., MSE = 0.;
 
 	do{
 		globalError = 0.;
@@ -57,27 +58,73 @@ void Perceptron::learn()
 		for (int i = 0; i < this->numberOfInputs; i++) //zmienna i oznacza indeks litery w tablicy
 		{
 			sumOfInput = getSumOfInput(i);
-			localError = this->expectedResults[i] - func(sumOfInput);
+			errorOfOnePerceptron = this->expectedResults[i] - func(sumOfInput);
 
 			//zmiana wag
 			for (int j = 0; j < BITS_OF_ONE_LETTER; j++) { //zmienna j oznacza bity danej litery
-				this->weights[j] += this->learningRate * localError * this->inputData[i][j];
+				this->weights[j] += this->learningRate * errorOfOnePerceptron * this->inputData[i][j];
+				//this->weights[j] += this->learningRate * (this->expectedResults[j] - func2(sumOfInput)) *this->inputData[i][j];
 			}
 
 			////////////////////////////////////////
-			globalError += pow(localError, 2);
+			globalError += pow(errorOfOnePerceptron, 2);
+			//MSE = pow(globalError, 2) / (BITS_OF_ONE_LETTER);
+			//MAPE = (globalError * 10 / BITS_OF_ONE_LETTER);
+			//cout << " MSE: " << MSE << "\tMAPE: " << MAPE << "%\n";
 		}
+
+
 		epoch++;
 	} while (globalError >= threshold);  //zapêtla uczenie dopóki b³¹d nie bêdzie ni¿szy od progu
 	
 	cout << "Liczba epok potrzebnych do nauczenia: " << epoch << endl;
+	//cout << "MSE: " << globalError << endl;
+}
+
+//ucz siê
+void Perceptron::learn2()
+{
+	double sumOfInput = 0.;	//zmienna przechowuj¹ca wynik getSumOfInput(i)
+	double errorOfOnePerceptron = 0.;	//b³¹d lokalny
+	double globalError = 0.;	//b³¹d globalny
+	double threshold = 1.5; //próg okreœlaj¹cy kiedy sieæ jet ju¿ nauczona
+	int epoch = 0;	//epoka uczenia siê (na start = 0)
+	double MAPE = 0., MSE = 0.;
+
+	do {
+		globalError = 0.;
+
+		for (int i = 0; i < this->numberOfInputs; i++) //zmienna i oznacza indeks litery w tablicy
+		{
+			sumOfInput = getSumOfInput(i);
+			errorOfOnePerceptron = this->expectedResults[i] - func2(sumOfInput);
+
+			//zmiana wag
+			for (int j = 0; j < BITS_OF_ONE_LETTER; j++) { //zmienna j oznacza bity danej litery
+				this->weights[j] += this->learningRate * errorOfOnePerceptron * this->inputData[i][j];
+				//this->weights[j] += this->learningRate * (this->expectedResults[j] - func2(sumOfInput)) *this->inputData[i][j];
+			}
+
+			////////////////////////////////////////
+			globalError += pow(errorOfOnePerceptron, 2);
+			//MSE = pow(globalError, 2) / (BITS_OF_ONE_LETTER);
+			//MAPE = (globalError * 10 / BITS_OF_ONE_LETTER);
+			//cout << " MSE: " << MSE << "\tMAPE: " << MAPE << "%\n";
+		}
+
+
+		epoch++;
+	} while (globalError >= threshold);  //zapêtla uczenie dopóki b³¹d nie bêdzie ni¿szy od progu
+
+	cout << "Liczba epok potrzebnych do nauczenia: " << epoch << endl;
+	//cout << "MSE: " << globalError << endl;
 }
 
 //funkcja testuj¹ca czy podane bity tworz¹ ma³¹ czy du¿¹ literê
 void Perceptron::test(int tab[])
 {
 	double sum = 0.;
-	double localError = 0.;
+	double errorOfOnePerceptron = 0.;
 	double globalError = 0.;
 	double threshold = 1.5;
 	double MAPE = 0., MSE = 0.;
@@ -86,18 +133,18 @@ void Perceptron::test(int tab[])
 		sum += tab[i] * this->weights[i]; //oblicza sume dla zadanego elementu
 		
 		//MAPE += ((fabs(tab[i] * this->weights[i] - tab[i])*(tab[i] * this->weights[i]) * 100) / (tab[i] * this->weights[i]);
-		//MSE += pow((tab[i] * weights[i]), 2);
+		//MSE += pow((tab[i] * weights[i]), 2);MSE = pow(globalError,2)/(SIZE);
 	}
-	localError = 1 - sum; //oblicza blad lokalny dla zadanego elementu
-	globalError = pow(2, localError);	//blad globalny dla zadanego elementu
+	errorOfOnePerceptron = 1 - sum; //b³¹d lokalny
+	globalError = pow(2, errorOfOnePerceptron);	//b³¹d globalny
 
 	if (globalError >= threshold)
-		this->resultOfTest = true; //podana litera jest du¿a
+		this->resultOfTest = true; //podana litera jest ma³a
 	else
-		this->resultOfTest = false; //podana litera jest ma³a
+		this->resultOfTest = false; //podana litera jest du¿a
 
 	//cout << "MAPE: " <<MAPE << endl;
-	//cout << "MSE: " <<MSE << endl;
+	//cout << "MSE: " << MSE << endl;
 
 	//wypisanie w konsoli ostatecznego wyniku testu
 	if (this->resultOfTest == true)
@@ -127,8 +174,19 @@ Perceptron::~Perceptron()
 	delete weights;
 }
 
-//wykorzystywane przy aktualizacji wag
+//wykorzystywane przy aktualizacji wag <funkcja sigmoidalna>
 double Perceptron::func(double sum)
-{	    // Wspolczynnik beta = 0.5 
-		return 1 / (1 + exp(-0.5*sum));
+{	    
+		return 1 / (1 + exp(-0.5*sum)); //wspó³czynnik beta = 0.5
+}
+//wykorzystywane przy aktualizacji wag <funkcja progowa unipolarna>
+double Perceptron::func2(double sum)
+{
+	return (sum > 0)? 1 : 0;
+}
+
+//pochodna func
+double Perceptron::der(double sum)
+{
+	return (0.5*exp(-0.5*sum))/(pow(exp(-0.5*sum)+1, 2));
 }

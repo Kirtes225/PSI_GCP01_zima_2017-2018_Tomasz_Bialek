@@ -23,10 +23,11 @@
 
 int main()
 {
-	int numberOfInputs = 20;
+	int numberOfInputs = HOW_MANY_LETTERS;
 	double learningRate = 0.01;
 
-	Perceptron perceptron(numberOfInputs, learningRate);
+	//pierwszy sposób
+	Perceptron perceptron1(numberOfInputs, learningRate);
 
 	int testLetter[BITS_OF_ONE_LETTER] = { d }; // bity litery do testowania
 	int testLetter2[BITS_OF_ONE_LETTER] = { D };
@@ -34,24 +35,48 @@ int main()
 	int testLetter4[BITS_OF_ONE_LETTER] = { a };
 	int testLetter5[BITS_OF_ONE_LETTER] = { i };
 
-	perceptron.learn();
+	cout << "Pierwszy sposob - funkcja sigmoidalna" << endl;
+
+	perceptron1.learn1();
 	cout << "TEST - Litera d" << endl;
-	perceptron.test(testLetter);
+	perceptron1.test(testLetter);
 
-	cout << endl << "TEST - Litera D" << endl;
-	perceptron.test(testLetter2);
+	cout << "TEST - Litera D" << endl;
+	perceptron1.test(testLetter2);
 
-	cout << endl << "TEST - Litera A" << endl;
-	perceptron.test(testLetter3);
+	cout << "TEST - Litera A" << endl;
+	perceptron1.test(testLetter3);
 
-	cout << endl << "TEST - Litera a" << endl;
-	perceptron.test(testLetter4);
+	cout << "TEST - Litera a" << endl;
+	perceptron1.test(testLetter4);
 
-	cout << endl << "TEST - Litera i" << endl;
-	perceptron.test(testLetter5);
+	cout << "TEST - Litera i" << endl;
+	perceptron1.test(testLetter5);
+
+	//drugi sposób 
+	Perceptron perceptron2 = Perceptron(numberOfInputs, learningRate);
+
+	cout << "Drugi sposob - funkcja progowa unipolarna " << endl;
+
+	perceptron2.learn2();
+	cout << "TEST - Litera d" << endl;
+	perceptron2.test(testLetter);
+
+	cout << "TEST - Litera D" << endl;
+	perceptron2.test(testLetter2);
+
+	cout << "TEST - Litera A" << endl;
+	perceptron2.test(testLetter3);
+
+	cout << "TEST - Litera a" << endl;
+	perceptron2.test(testLetter4);
+
+	cout << "TEST - Litera i" << endl;
+	perceptron2.test(testLetter5);
 
 
-	perceptron.~Perceptron();
+	perceptron1.~Perceptron();
+	perceptron2.~Perceptron();
 	system("PAUSE");
 	return 0;
 }
