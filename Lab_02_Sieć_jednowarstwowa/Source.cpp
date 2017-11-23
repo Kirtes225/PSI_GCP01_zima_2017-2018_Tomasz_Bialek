@@ -1,4 +1,5 @@
-#include "Perceptron.h"
+#include "Adaline.h"
+#include "DeltaRule.h"
 
 # define A 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1
 # define B 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0
@@ -23,60 +24,21 @@
 
 int main()
 {
-	int numberOfInputs = HOW_MANY_LETTERS;
-	double learningRate = 0.01;
+	//Perceptron.h nie jest uzywana (sluzy tylko do zalaczania bibliotek i trzymania define)
+	double learningRate = 0.1; //wspolczynnik uczenia
 
-	//pierwszy sposób
-	Perceptron perceptron1(numberOfInputs, learningRate);
+	cout << "Learning Rate: " << learningRate << endl;
 
-	int testLetter[BITS_OF_ONE_LETTER] = { d }; // bity litery do testowania
-	int testLetter2[BITS_OF_ONE_LETTER] = { D };
-	int testLetter3[BITS_OF_ONE_LETTER] = { A };
-	int testLetter4[BITS_OF_ONE_LETTER] = { a };
-	int testLetter5[BITS_OF_ONE_LETTER] = { i };
+	//Adaline
+	Adaline adaline(learningRate);
+	adaline.learn();
+	adaline.test();
 
-	cout << "Pierwszy sposob - funkcja sigmoidalna" << endl;
+	//DeltaRule
+	DeltaRule deltaRule(learningRate);
+	deltaRule.learn();
+	deltaRule.test();
 
-	perceptron1.learn1();
-	cout << "TEST - Litera d" << endl;
-	perceptron1.test(testLetter);
-
-	cout << "TEST - Litera D" << endl;
-	perceptron1.test(testLetter2);
-
-	cout << "TEST - Litera A" << endl;
-	perceptron1.test(testLetter3);
-
-	cout << "TEST - Litera a" << endl;
-	perceptron1.test(testLetter4);
-
-	cout << "TEST - Litera i" << endl;
-	perceptron1.test(testLetter5);
-
-	//drugi sposób 
-	Perceptron perceptron2 = Perceptron(numberOfInputs, learningRate);
-
-	cout << "Drugi sposob - funkcja progowa unipolarna " << endl;
-
-	perceptron2.learn2();
-	cout << "TEST - Litera d" << endl;
-	perceptron2.test(testLetter);
-
-	cout << "TEST - Litera D" << endl;
-	perceptron2.test(testLetter2);
-
-	cout << "TEST - Litera A" << endl;
-	perceptron2.test(testLetter3);
-
-	cout << "TEST - Litera a" << endl;
-	perceptron2.test(testLetter4);
-
-	cout << "TEST - Litera i" << endl;
-	perceptron2.test(testLetter5);
-
-
-	perceptron1.~Perceptron();
-	perceptron2.~Perceptron();
 	system("PAUSE");
 	return 0;
 }
